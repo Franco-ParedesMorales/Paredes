@@ -1,4 +1,5 @@
 import os
+import ipaddress
 
 # Función para limpiar la pantalla de manera compatible con diferentes sistemas operativos
 def clear_screen():
@@ -51,6 +52,14 @@ def mostrar_dispositivos(sector, dispositivos_por_sector):
             print("Dispositivo no válido.")
     else:
         print("Sector no válido.")
+
+# Función para validar una dirección IP
+def validar_ip(ip):
+    try:
+        ipaddress.ip_address(ip)
+        return True
+    except ValueError:
+        return False
 
 # Función para leer el archivo Routersucursal.txt
 def leer_archivo_routersucursal():
@@ -164,9 +173,24 @@ def borrar_dispositivo(sector, dispositivos_por_sector):
 # Función para añadir dispositivos a un sector
 def añadir_dispositivo(sector, dispositivos_por_sector):
     if sector in dispositivos_por_sector:
-        nuevo_dispositivo = input("Ingrese el nombre del nuevo dispositivo: ")
+        nombre = input("Ingrese el nombre del nuevo dispositivo: ")
+        ip = input("Ingrese la IP del nuevo dispositivo: ")
+        while not validar_ip(ip):
+            print("IP no válida. Intente de nuevo.")
+            ip = input("Ingrese la IP del nuevo dispositivo: ")
+        vlan = input("Ingrese la VLAN del nuevo dispositivo: ")
+        modelo = input("Ingrese el modelo jerárquico del nuevo dispositivo: ")
+        servicios = input("Ingrese los servicios del nuevo dispositivo: ")
+
+        nuevo_dispositivo = {
+            'nombre': nombre,
+            'ip': ip,
+            'vlan': vlan,
+            'modelo': modelo,
+            'servicios': servicios
+        }
         dispositivos_por_sector[sector]['dispositivos'].append(nuevo_dispositivo)
-        print(f"Dispositivo '{nuevo_dispositivo}' añadido con éxito al sector {sector}.")
+        print(f"Dispositivo '{nombre}' añadido con éxito al sector {sector}.")
     else:
         print("Sector no válido.")
 
